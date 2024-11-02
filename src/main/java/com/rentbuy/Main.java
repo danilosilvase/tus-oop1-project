@@ -1,13 +1,8 @@
 package com.rentbuy;
 
-import com.rentbuy.property.House;
-import com.rentbuy.property.Apartment;
-import com.rentbuy.property.Address;
+import com.rentbuy.property.*;
 import com.rentbuy.customer.Customer;
-import com.rentbuy.transaction.Transaction;
-import com.rentbuy.transaction.PropertyAlreadyTakenException;
-import com.rentbuy.property.Property;
-import com.rentbuy.property.PropertyStatus;
+import com.rentbuy.transaction.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -18,6 +13,7 @@ import java.util.stream.Collectors;
 public class Main {
     public static void main(String[] args) {
         List<Property> properties = new ArrayList<>();
+        List<Customer> customers = new ArrayList<>();
         Scanner scanner = new Scanner(System.in);
 
         try {
@@ -27,10 +23,12 @@ public class Main {
             while (running) {
                 System.out.println("\nSelect an option:");
                 System.out.println("1. Create a new property");
-                System.out.println("2. View all properties");
-                System.out.println("3. Rent a property");
-                System.out.println("4. Purchase a property");
-                System.out.println("5. View available properties");
+                System.out.println("2. Create a new customer");
+                System.out.println("3. View all properties");
+                System.out.println("4. View all customers");
+                System.out.println("5. Rent a property");
+                System.out.println("6. Purchase a property");
+                System.out.println("7. View available properties");
                 System.out.println("0. Exit");
 
                 int choice = scanner.nextInt();
@@ -72,12 +70,33 @@ public class Main {
                         }
                     }
                     case 2 -> {
+                        System.out.println("Enter customer name:");
+                        String name = scanner.nextLine();
+
+                        System.out.println("Enter contact information:");
+                        String contactInfo = scanner.nextLine();
+
+                        System.out.println("Is the customer interested in renting? (true/false):");
+                        boolean interestedInRenting = scanner.nextBoolean();
+                        scanner.nextLine(); // Consume the newline character
+
+                        Customer customer = new Customer(name, contactInfo, interestedInRenting);
+                        customers.add(customer);
+                        System.out.println("Customer added: " + customer);
+                    }
+                    case 3 -> {
                         System.out.println("All Properties:");
                         for (Property property : properties) {
                             System.out.println(property.getDetails());
                         }
                     }
-                    case 3 -> {
+                    case 4 -> {
+                        System.out.println("All Customers:");
+                        for (Customer customer : customers) {
+                            System.out.println(customer);
+                        }
+                    }
+                    case 5 -> {
                         System.out.println("Enter the address of the property to rent:");
                         String rentAddress = scanner.nextLine();
                         Property propertyToRent = findPropertyByAddress(properties, rentAddress);
@@ -88,7 +107,7 @@ public class Main {
                             System.out.println("Property not found or already taken.");
                         }
                     }
-                    case 4 -> {
+                    case 6 -> {
                         System.out.println("Enter the address of the property to purchase:");
                         String purchaseAddress = scanner.nextLine();
                         Property propertyToPurchase = findPropertyByAddress(properties, purchaseAddress);
@@ -99,7 +118,7 @@ public class Main {
                             System.out.println("Property not found or already taken.");
                         }
                     }
-                    case 5 -> {
+                    case 7 -> {
                         System.out.println("Available Properties:");
                         List<Property> availableProperties = properties.stream()
                                 .filter(property -> property.getStatus() == PropertyStatus.AVAILABLE)
