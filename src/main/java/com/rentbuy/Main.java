@@ -171,7 +171,7 @@ public class Main {
                         scanner.nextLine();
 
                         if (propertyIndex < 0 || propertyIndex >= availablePropertiesForPurchase.size()) {
-                            System.out.println("Invalid property selection.");
+                            System.out.println("Invalid property selection. Please try again.");
                         } else {
                             Property propertyToPurchase = availablePropertiesForPurchase.get(propertyIndex);
                             propertyToPurchase.setStatus(PropertyStatus.SOLD);
@@ -190,6 +190,19 @@ public class Main {
                             for (Property property : availableProperties) {
                                 System.out.println(property.getDetails());
                             }
+                        }
+                    }
+
+                    case 8 -> {
+                        System.out.println("Enter the customer name to remove:");
+                        String customerNameToRemove = scanner.nextLine();
+                        Customer customerToRemove = findCustomerByName(customers, customerNameToRemove);
+
+                        if (customerToRemove == null) {
+                            System.out.println("Customer not found.");
+                        } else {
+                            customers.remove(customerToRemove);
+                            System.out.println("Customer removed successfully: " + customerToRemove.getName());
                         }
                     }
 
