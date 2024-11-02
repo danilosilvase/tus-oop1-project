@@ -1,14 +1,18 @@
 package com.rentbuy.property;
 
+// Abstract Property class
 public abstract class Property {
     private String address;
     private double price;
     private String type;
+    private PropertyStatus status;
 
+    // Constructor
     public Property(String address, double price, String type) {
         this.address = address;
         this.price = price;
         this.type = type;
+        this.status = PropertyStatus.AVAILABLE; // Default status is AVAILABLE
     }
 
     // Getters and Setters
@@ -36,11 +40,19 @@ public abstract class Property {
         this.type = type;
     }
 
+    public PropertyStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(PropertyStatus status) {
+        this.status = status;
+    }
+
     // Abstract method for specific details of the property
     public abstract String getDetails();
 
     @Override
     public String toString() {
-        return "Address: " + address + ", Price: " + price + ", Type: " + type;
+        return "Address: " + address + ", Price: " + price + ", Type: " + type + ", Status: " + status;
     }
 }
