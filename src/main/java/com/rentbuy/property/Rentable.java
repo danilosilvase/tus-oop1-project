@@ -1,6 +1,7 @@
 package com.rentbuy.property;
 
-// An interface defining behavior for properties that can be rented.
+import com.rentbuy.transaction.PropertyAlreadyTakenException;
+
 public interface Rentable {
-    void rent();
+    void rent() throws PropertyAlreadyTakenException;
 }

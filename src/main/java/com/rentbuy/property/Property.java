@@ -1,27 +1,20 @@
 package com.rentbuy.property;
 
-// Sealed class Property, allowing only House and Apartment to extend it
-public sealed abstract class Property permits House, Apartment {
-    private Address address;
+import com.rentbuy.transaction.PropertyAlreadyTakenException;
+
+public abstract sealed class Property permits House, Apartment {
+    private final Address address;
     private double price;
-    private String type;
     private PropertyStatus status;
 
-    // Constructor
-    public Property(Address address, double price, String type) {
+    public Property(Address address, double price) {
         this.address = address;
         this.price = price;
-        this.type = type;
-        this.status = PropertyStatus.AVAILABLE; // Default status is AVAILABLE
+        this.status = PropertyStatus.AVAILABLE;
     }
 
-    // Getters and Setters
     public Address getAddress() {
         return address;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
     }
 
     public double getPrice() {
@@ -32,14 +25,6 @@ public sealed abstract class Property permits House, Apartment {
         this.price = price;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public PropertyStatus getStatus() {
         return status;
     }
@@ -48,12 +33,10 @@ public sealed abstract class Property permits House, Apartment {
         this.status = status;
     }
 
-    // Abstract method for specific details of the property
-    public abstract String getDetails();
-
-    @Override
-    public String toString() {
-        return "Address: " + address.street() + ", " + address.city() + ", " + address.country() +
-                ", Price: " + price + ", Type: " + type + ", Status: " + status;
+    // Add getDetails method
+    public String getDetails() {
+        return "Address: " + address + ", Price: " + price + ", Status: " + status;
     }
+
+    public abstract void rent() throws PropertyAlreadyTakenException;
 }
