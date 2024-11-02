@@ -2,6 +2,7 @@ package com.rentbuy;
 
 import com.rentbuy.property.House;
 import com.rentbuy.property.Apartment;
+import com.rentbuy.property.Address;
 import com.rentbuy.customer.Customer;
 import com.rentbuy.transaction.Transaction;
 import com.rentbuy.transaction.PropertyAlreadyTakenException;
@@ -16,9 +17,13 @@ import java.util.stream.Collectors;
 public class Main {
     public static void main(String[] args) {
         try {
+            // Creating addresses
+            Address houseAddress = new Address("123 Green St", "Dublin", "Ireland");
+            Address apartmentAddress = new Address("456 Blue Ave", "Dublin", "Ireland");
+
             // Creating properties
-            House house = new House("123 Green St, Dublin", 350000, true);
-            Apartment apartment = new Apartment("456 Blue Ave, Dublin", 250000, 5);
+            House house = new House(houseAddress, 350000, true);
+            Apartment apartment = new Apartment(apartmentAddress, 250000, 5);
 
             // Printing property details
             System.out.println("House Details: " + house.getDetails());
