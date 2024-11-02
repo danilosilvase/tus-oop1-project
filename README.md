@@ -46,11 +46,72 @@ The core functionality revolves around managing properties, customers, and trans
 - **JUnit Integration**: Initially, integrating JUnit 5 for testing was challenging due to version compatibility issues. This was resolved by ensuring consistent versions of `junit-jupiter-api` and `junit-jupiter-engine`.
 - **Directory Structure**: Adjusting the project to follow the standard Maven directory layout required restructuring the codebase. This change improved the organization but required some path adjustments during compilation and testing.
 
-## Next Steps
+## Use Cases
 
-- **More Use Cases**: Expand the functionality to include additional use cases such as removing properties, updating customer information, and advanced search capabilities.
-- **Advanced Java Features**: Implement more features from Java 22/23 to gain extra marks, such as exploring new language syntax or APIs.
-- **Improved Documentation**: Add more detailed comments to the code, create a comprehensive user manual, and provide additional UML diagrams for better architectural understanding.
+### Use Case 1: Create a New Property
+- **Actor**: Admin/User
+- **Description**: The user creates a new property by providing details such as address, price, type (House or Apartment), and additional attributes like garden or floor level.
+- **Preconditions**: The user must be logged in as an admin.
+- **Postconditions**: A new property is added to the system and marked as AVAILABLE.
+- **Main Flow**:
+  1. User selects the option to create a new property.
+  2. User provides property details.
+  3. System validates the input and saves the property.
+  4. Confirmation message is displayed.
+
+### Use Case 2: Create a Customer
+- **Actor**: Admin/User
+- **Description**: The user creates a new customer with basic information such as name, contact details, and renting preferences.
+- **Preconditions**: The user must have the necessary permissions.
+- **Postconditions**: The customer is added to the system.
+- **Main Flow**:
+  1. User selects the option to add a new customer.
+  2. User provides customer details (name, contact information, renting preference).
+  3. System validates and saves the customer.
+  4. Confirmation message is displayed.
+
+### Use Case 3: Rent a Property
+- **Actor**: Customer
+- **Description**: A customer rents a property that is marked as AVAILABLE.
+- **Preconditions**: The property must be available, and the customer must be registered.
+- **Postconditions**: The property status is updated to RENTED.
+- **Main Flow**:
+  1. Customer selects an available property to rent.
+  2. System checks the availability of the property.
+  3. System updates the property status to RENTED.
+  4. Confirmation message is displayed.
+
+### Use Case 4: Purchase a Property
+- **Actor**: Customer
+- **Description**: A customer purchases a property that is marked as AVAILABLE.
+- **Preconditions**: The property must be available, and the customer must be registered.
+- **Postconditions**: The property status is updated to SOLD.
+- **Main Flow**:
+  1. Customer selects an available property to purchase.
+  2. System checks the availability of the property.
+  3. System updates the property status to SOLD.
+  4. Confirmation message is displayed.
+
+### Use Case 5: View Available Properties
+- **Actor**: Customer/User
+- **Description**: The user views a list of properties that are available for rent or purchase.
+- **Preconditions**: None.
+- **Postconditions**: A list of available properties is displayed.
+- **Main Flow**:
+  1. User selects the option to view available properties.
+  2. System retrieves properties marked as AVAILABLE.
+  3. The list of available properties is displayed to the user.
+
+### Use Case 6: Handle Property Already Taken Exception
+- **Actor**: Customer/User
+- **Description**: The system handles an exception when a customer tries to rent or purchase a property that is already taken.
+- **Preconditions**: The property must be marked as RENTED or SOLD.
+- **Postconditions**: The customer is notified that the property is not available.
+- **Main Flow**:
+  1. Customer attempts to rent or purchase a property.
+  2. System checks the property status.
+  3. If the property is already taken, the system throws `PropertyAlreadyTakenException`.
+  4. An error message is displayed to the customer.
 
 ## How to Run the Project
 
