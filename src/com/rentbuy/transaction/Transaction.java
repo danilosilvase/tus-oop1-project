@@ -2,10 +2,10 @@ package com.rentbuy.transaction;
 
 import com.rentbuy.customer.Customer;
 import com.rentbuy.property.Property;
+import com.rentbuy.property.PropertyStatus;
 
 import java.time.LocalDate;
 
-// The Transaction class represents a transaction involving a property
 public class Transaction {
     private Customer customer;
     private Property property;
@@ -16,7 +16,7 @@ public class Transaction {
     // Constructor for Transaction class
     public Transaction(Customer customer, Property property, LocalDate transactionDate, double transactionAmount) throws PropertyAlreadyTakenException {
         // Check if the property is already sold/rented.
-        if (isCompleted) {
+        if (property.getStatus() != PropertyStatus.AVAILABLE) {
             throw new PropertyAlreadyTakenException("The property is already sold or rented.");
         }
 
@@ -24,7 +24,8 @@ public class Transaction {
         this.property = property;
         this.transactionDate = transactionDate;
         this.transactionAmount = transactionAmount;
-        this.isCompleted = true; // Mark transaction as completed.
+        this.isCompleted = true; // Mark transaction as completed
+        property.setStatus(PropertyStatus.SOLD); // Update property status to SOLD
     }
 
     // Getters and setters
