@@ -28,6 +28,8 @@ public class Main {
                 System.out.println("5. Rent a property");
                 System.out.println("6. Purchase a property");
                 System.out.println("7. View available properties");
+                System.out.println("8. Remove a customer");
+                System.out.println("9. Remove a property");
                 System.out.println("0. Exit");
 
                 int choice = scanner.nextInt();
@@ -207,14 +209,25 @@ public class Main {
                     }
 
                     case 9 -> {
-                        System.out.println("Enter the address of the property to remove:");
-                        String addressToRemove = scanner.nextLine();
-                        Property propertyToRemove = findPropertyByAddress(properties, addressToRemove);
+                        if (properties.isEmpty()) {
+                            System.out.println("No properties available to remove.");
+                            break;
+                        }
 
-                        if (propertyToRemove == null) {
-                            System.out.println("Property not found.");
+                        System.out.println("Available Properties for Removal:");
+                        for (int i = 0; i < properties.size(); i++) {
+                            System.out.println((i + 1) + ". " + properties.get(i).getDetails());
+                        }
+
+                        System.out.println("Enter the number of the property to remove:");
+                        int propertyIndex = scanner.nextInt() - 1;
+                        scanner.nextLine(); // Consume the newline character
+
+                        if (propertyIndex < 0 || propertyIndex >= properties.size()) {
+                            System.out.println("Invalid property selection.");
                         } else {
-                            properties.remove(propertyToRemove);
+                            Property propertyToRemove = properties.get(propertyIndex);
+                            properties.remove(propertyIndex);
                             System.out.println("Property removed successfully: " + propertyToRemove.getDetails());
                         }
                     }
