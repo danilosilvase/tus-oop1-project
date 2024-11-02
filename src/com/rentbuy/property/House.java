@@ -1,7 +1,7 @@
 package com.rentbuy.property;
 
-// The House class extends Property and implements Rentable
-public class House extends Property implements Rentable {
+// Final class House extends sealed Property class
+public final class House extends Property implements Rentable {
     private boolean hasGarden;
 
     // Constructor for House class

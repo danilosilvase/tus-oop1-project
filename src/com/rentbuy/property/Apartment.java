@@ -1,7 +1,7 @@
 package com.rentbuy.property;
 
-// The Apartment class extends Property and implements Rentable
-public class Apartment extends Property implements Rentable {
+// Final class Apartment extends sealed Property class
+public final class Apartment extends Property implements Rentable {
     private int floorLevel;
 
     // Constructor for Apartment class
