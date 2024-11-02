@@ -105,15 +105,28 @@ public class Main {
                             break;
                         }
 
-                        System.out.println("Enter the address of the property to rent:");
-                        String rentAddress = scanner.nextLine();
-                        Property propertyToRent = findPropertyByAddress(properties, rentAddress);
+                        List<Property> availableProperties = properties.stream()
+                                .filter(property -> property.getStatus() == PropertyStatus.AVAILABLE)
+                                .collect(Collectors.toList());
 
-                        if (propertyToRent == null) {
-                            System.out.println("Property not found.");
-                        } else if (propertyToRent.getStatus() != PropertyStatus.AVAILABLE) {
-                            System.out.println("Property is not available for rent.");
+                        if (availableProperties.isEmpty()) {
+                            System.out.println("No available properties for rent.");
+                            break;
+                        }
+
+                        System.out.println("Available Properties:");
+                        for (int i = 0; i < availableProperties.size(); i++) {
+                            System.out.println((i + 1) + ". " + availableProperties.get(i).getDetails());
+                        }
+
+                        System.out.println("Enter the number of the property to rent:");
+                        int propertyIndex = scanner.nextInt() - 1;
+                        scanner.nextLine(); // Consume the newline character
+
+                        if (propertyIndex < 0 || propertyIndex >= availableProperties.size()) {
+                            System.out.println("Invalid property selection.");
                         } else {
+                            Property propertyToRent = availableProperties.get(propertyIndex);
                             try {
                                 propertyToRent.rent();
                                 System.out.println("Property rented successfully: " + propertyToRent.getDetails());
