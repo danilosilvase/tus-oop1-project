@@ -1,7 +1,7 @@
 package com.rentbuy.property;
 
-// Abstract Property class
-public abstract class Property {
+// Sealed class Property, allowing only House and Apartment to extend it
+public sealed abstract class Property permits House, Apartment {
     private String address;
     private double price;
     private String type;
