@@ -5,20 +5,29 @@ import com.rentbuy.property.Property;
 
 import java.time.LocalDate;
 
+// The Transaction class represents a transaction involving a property
 public class Transaction {
     private Customer customer;
     private Property property;
     private LocalDate transactionDate;
     private double transactionAmount;
+    private boolean isCompleted;
 
-    public Transaction(Customer customer, Property property, LocalDate transactionDate, double transactionAmount) {
+    // Constructor for Transaction class
+    public Transaction(Customer customer, Property property, LocalDate transactionDate, double transactionAmount) throws PropertyAlreadyTakenException {
+        // Check if the property is already sold/rented.
+        if (isCompleted) {
+            throw new PropertyAlreadyTakenException("The property is already sold or rented.");
+        }
+
         this.customer = customer;
         this.property = property;
         this.transactionDate = transactionDate;
         this.transactionAmount = transactionAmount;
+        this.isCompleted = true; // Mark transaction as completed.
     }
 
-    // Getters and Setters
+    // Getters and setters
     public Customer getCustomer() {
         return customer;
     }
@@ -51,6 +60,7 @@ public class Transaction {
         this.transactionAmount = transactionAmount;
     }
 
+    // Overriding toString to provide transaction details
     @Override
     public String toString() {
         return "Transaction: " + property.getDetails() + " sold/rented to " + customer.getName() + " on " + transactionDate + " for " + transactionAmount;
