@@ -4,7 +4,6 @@ import com.rentbuy.property.*;
 import com.rentbuy.customer.Customer;
 import com.rentbuy.transaction.*;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -16,11 +15,11 @@ public class Main {
         List<Customer> customers = new ArrayList<>();
         Scanner scanner = new Scanner(System.in);
 
-        try {
-            System.out.println("Welcome to RentBuy!");
-            boolean running = true;
+        System.out.println("Welcome to RentBuy!");
+        boolean running = true;
 
-            while (running) {
+        while (running) {
+            try {
                 System.out.println("\nSelect an option:");
                 System.out.println("1. Create a new property");
                 System.out.println("2. Create a new customer");
@@ -97,14 +96,30 @@ public class Main {
                         }
                     }
                     case 5 -> {
+                        System.out.println("Enter customer name:");
+                        String customerName = scanner.nextLine();
+                        Customer customer = findCustomerByName(customers, customerName);
+
+                        if (customer == null) {
+                            System.out.println("Customer not found. Please create the customer first.");
+                            break;
+                        }
+
                         System.out.println("Enter the address of the property to rent:");
                         String rentAddress = scanner.nextLine();
                         Property propertyToRent = findPropertyByAddress(properties, rentAddress);
-                        if (propertyToRent != null && propertyToRent.getStatus() == PropertyStatus.AVAILABLE) {
-                            propertyToRent.rent();
-                            System.out.println("Property rented: " + propertyToRent.getDetails());
+
+                        if (propertyToRent == null) {
+                            System.out.println("Property not found.");
+                        } else if (propertyToRent.getStatus() != PropertyStatus.AVAILABLE) {
+                            System.out.println("Property is not available for rent.");
                         } else {
-                            System.out.println("Property not found or already taken.");
+                            try {
+                                propertyToRent.rent();
+                                System.out.println("Property rented successfully: " + propertyToRent.getDetails());
+                            } catch (PropertyAlreadyTakenException e) {
+                                System.out.println("Transaction failed: " + e.getMessage());
+                            }
                         }
                     }
                     case 6 -> {
@@ -133,17 +148,25 @@ public class Main {
                     }
                     default -> System.out.println("Invalid choice. Please try again.");
                 }
+            } catch (java.util.InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a number corresponding to the menu options.");
+                scanner.nextLine(); // Consume the invalid input
             }
-        } catch (PropertyAlreadyTakenException e) {
-            System.out.println("Transaction failed: " + e.getMessage());
-        } finally {
-            scanner.close();
         }
+
+        scanner.close();
     }
 
     private static Property findPropertyByAddress(List<Property> properties, String address) {
         return properties.stream()
                 .filter(property -> property.getAddress().toString().equalsIgnoreCase(address))
+                .findFirst()
+                .orElse(null);
+    }
+
+    private static Customer findCustomerByName(List<Customer> customers, String name) {
+        return customers.stream()
+                .filter(customer -> customer.getName().equalsIgnoreCase(name))
                 .findFirst()
                 .orElse(null);
     }
