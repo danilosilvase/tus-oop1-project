@@ -175,7 +175,7 @@ public class Main {
                         } else {
                             Property propertyToPurchase = availablePropertiesForPurchase.get(propertyIndex);
                             propertyToPurchase.setStatus(PropertyStatus.SOLD);
-                            System.out.println("Property purchased successfully: " + propertyToPurchase.getDetails());
+                            System.out.println("Property purchased successfully by " + customer.getName() + ": " + propertyToPurchase.getDetails());
                         }
                     }
 
