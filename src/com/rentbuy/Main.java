@@ -5,8 +5,13 @@ import com.rentbuy.property.Apartment;
 import com.rentbuy.customer.Customer;
 import com.rentbuy.transaction.Transaction;
 import com.rentbuy.transaction.PropertyAlreadyTakenException;
+import com.rentbuy.property.Property;
+import com.rentbuy.property.PropertyStatus;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) {
@@ -31,8 +36,20 @@ public class Main {
             Transaction transaction = new Transaction(customer, house, LocalDate.now(), 350000);
             System.out.println(transaction);
 
-            // Attempting another transaction on the same property to trigger the exception
-            Transaction anotherTransaction = new Transaction(customer, house, LocalDate.now(), 350000);
+            // Create a list of properties
+            List<Property> properties = new ArrayList<>();
+            properties.add(house);
+            properties.add(apartment);
+
+            // Use a lambda expression to filter available properties
+            List<Property> availableProperties = properties.stream()
+                    .filter(property -> property.getStatus() == PropertyStatus.AVAILABLE)
+                    .collect(Collectors.toList());
+
+            System.out.println("Available Properties:");
+            for (Property prop : availableProperties) {
+                System.out.println(prop.getDetails());
+            }
 
         } catch (PropertyAlreadyTakenException e) {
             System.out.println("Transaction failed: " + e.getMessage());
