@@ -9,13 +9,26 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
+// adding import to excercise features from javam 22/23
+import java.util.concurrent.StructuredTaskScope;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.type.TypeReference;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import com.fasterxml.jackson.databind.jsontype.NamedType;
+
 public class Main {
+    private static final String DATA_FOLDER = "data";
     private static final List<Property> properties = new ArrayList<>();
     private static final List<Customer> customers = new ArrayList<>();
     private static final Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
         System.out.println("Welcome to RentBuy!");
+        ensureDataFolderExists();
+        loadData(); // load data at the start
         boolean running = true;
 
         while (running) {
@@ -32,6 +45,7 @@ public class Main {
                 case 8 -> removeCustomer();
                 case 9 -> removeProperty();
                 case 0 -> {
+                    saveData(); // save persistent data before exiting
                     running = false;
                     System.out.println("Exiting RentBuy. Goodbye!");
                 }
@@ -60,7 +74,7 @@ public class Main {
         System.out.println("1. House");
         System.out.println("2. Apartment");
         int propertyTypeChoice = getUserInputInt("Enter choice:");
-        
+
         if (propertyTypeChoice != 1 && propertyTypeChoice != 2) {
             System.out.println("Invalid property type selection.");
             return;
@@ -114,7 +128,8 @@ public class Main {
 
     private static void rentProperty() {
         Customer customer = getCustomerByName();
-        if (customer == null) return;
+        if (customer == null)
+            return;
 
         List<Property> availableProperties = properties.stream()
                 .filter(property -> property.getStatus() == PropertyStatus.AVAILABLE)
@@ -138,7 +153,8 @@ public class Main {
 
     private static void purchaseProperty() {
         Customer customer = getCustomerByName();
-        if (customer == null) return;
+        if (customer == null)
+            return;
 
         List<Property> availableProperties = properties.stream()
                 .filter(property -> property.getStatus() == PropertyStatus.AVAILABLE)
@@ -152,7 +168,8 @@ public class Main {
         Property propertyToPurchase = selectPropertyFromList(availableProperties, "Available Properties for Purchase:");
         if (propertyToPurchase != null) {
             propertyToPurchase.setStatus(PropertyStatus.SOLD);
-            System.out.println("Property purchased successfully by " + customer.getName() + ": " + propertyToPurchase.getDetails());
+            System.out.println("Property purchased successfully by " + customer.getName() + ": "
+                    + propertyToPurchase.getDetails());
         }
     }
 
@@ -197,7 +214,7 @@ public class Main {
             scanner.next();
         }
         int input = scanner.nextInt();
-        scanner.nextLine(); 
+        scanner.nextLine();
         return input;
     }
 
@@ -208,7 +225,7 @@ public class Main {
             scanner.next();
         }
         double input = scanner.nextDouble();
-        scanner.nextLine(); 
+        scanner.nextLine();
         return input;
     }
 
@@ -219,7 +236,7 @@ public class Main {
             scanner.next();
         }
         boolean input = scanner.nextBoolean();
-        scanner.nextLine(); 
+        scanner.nextLine();
         return input;
     }
 
@@ -257,11 +274,97 @@ public class Main {
         return propertyList.get(propertyIndex);
     }
 
-    // methods for finding cudstomer by name
+    // method for finding cudstomer by name
     private static Customer findCustomerByName(List<Customer> customers, String name) {
         return customers.stream()
                 .filter(customer -> customer.getName().equalsIgnoreCase(name))
                 .findFirst()
                 .orElse(null);
     }
+
+    // add load data function toexercise featurea from java 22/23
+
+    // private static ObjectMapper getConfiguredObjectMapper() {
+    //     ObjectMapper mapper = new ObjectMapper();
+    //     // This configures Jackson to use default typing, which ensures type information
+    //     // is included in serialization.
+    //     mapper.activateDefaultTyping(mapper.getPolymorphicTypeValidator(), ObjectMapper.DefaultTyping.EVERYTHING);
+    //     return mapper;
+    // }
+
+    private static void ensureDataFolderExists() {
+        try {
+            Files.createDirectories(Paths.get(DATA_FOLDER));
+        } catch (IOException e) {
+            System.out.println("Error creating data folder: " + e.getMessage());
+        }
+    }
+
+    private static void loadData() {
+        try (var scope = new StructuredTaskScope.ShutdownOnSuccess<Void>()) {
+            scope.fork(() -> {
+                loadPropertiesData();
+                return null;
+            });
+            scope.fork(() -> {
+                loadCustomersData();
+                return null;
+            });
+
+            scope.join();
+        } catch (Exception e) {
+            System.out.println("Error during loading data: " + e.getMessage());
+        }
+    }
+
+    private static void loadPropertiesData() {
+        ObjectMapper mapper = getConfiguredObjectMapper();
+        try {
+            properties.addAll(
+                    mapper.readValue(new File(DATA_FOLDER + "/properties.json"), new TypeReference<List<Property>>() {
+                    }));
+            System.out.println("Properties loaded successfully.");
+        } catch (IOException e) {
+            System.out.println("Failed to load properties: " + e.getMessage());
+        }
+    }
+
+    private static void loadCustomersData() {
+        ObjectMapper mapper = getConfiguredObjectMapper();
+        try {
+            customers.addAll(
+                    mapper.readValue(new File(DATA_FOLDER + "/customers.json"), new TypeReference<List<Customer>>() {
+                    }));
+            System.out.println("Customers loaded successfully.");
+        } catch (IOException e) {
+            System.out.println("Failed to load customers: " + e.getMessage());
+        }
+    }
+
+    private static void saveData() {
+        ObjectMapper mapper = getConfiguredObjectMapper();
+        try {
+            mapper.writeValue(new File(DATA_FOLDER + "/properties.json"), properties);
+            System.out.println("Properties saved successfully.");
+        } catch (IOException e) {
+            System.out.println("Failed to save properties: " + e.getMessage());
+        }
+
+        try {
+            mapper.writeValue(new File(DATA_FOLDER + "/customers.json"), customers);
+            System.out.println("Customers saved successfully.");
+        } catch (IOException e) {
+            System.out.println("Failed to save customers: " + e.getMessage());
+        }
+    }
+
+    private static ObjectMapper getConfiguredObjectMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.activateDefaultTyping(mapper.getPolymorphicTypeValidator(), ObjectMapper.DefaultTyping.EVERYTHING);
+        mapper.registerSubtypes(
+                new NamedType(House.class, "house"),
+                new NamedType(Apartment.class, "apartment"));
+        return mapper;
+    }
+
 }

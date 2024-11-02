@@ -5,6 +5,10 @@ public class Customer {
     private String contactInfo;
     private boolean isInterestedInRenting;
 
+    // adding default constructor for Jackson
+    public Customer() {
+    }
+
     public Customer(String name, String contactInfo, boolean isInterestedInRenting) {
         this.name = name;
         this.contactInfo = contactInfo;

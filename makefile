@@ -18,8 +18,8 @@ MAIN_CLASS := com.rentbuy.Main
 JAVAC := javac
 JAVA := java
 JUNIT := org.junit.platform.console.ConsoleLauncher
-JAVAC_FLAGS := -cp ".:$(LIB_DIR)/*" -d
-JAVA_FLAGS := -cp $(CLASSPATH)
+JAVAC_FLAGS := --enable-preview -source 23 -cp ".:$(LIB_DIR)/*" -d
+JAVA_FLAGS := --enable-preview -cp $(CLASSPATH)
 
 # Build all Java files
 .PHONY: build
