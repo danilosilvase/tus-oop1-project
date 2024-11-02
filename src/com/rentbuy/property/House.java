@@ -5,7 +5,7 @@ public final class House extends Property implements Rentable {
     private boolean hasGarden;
 
     // Constructor for House class
-    public House(String address, double price, boolean hasGarden) {
+    public House(Address address, double price, boolean hasGarden) {
         super(address, price, "House");
         this.hasGarden = hasGarden;
     }
@@ -29,6 +29,6 @@ public final class House extends Property implements Rentable {
     // Implementation of rent method from Rentable interface
     @Override
     public void rent() {
-        System.out.println("House at " + getAddress() + " has been rented.");
+        System.out.println("House at " + getAddress().street() + ", " + getAddress().city() + " has been rented.");
     }
 }

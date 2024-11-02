@@ -5,7 +5,7 @@ public final class Apartment extends Property implements Rentable {
     private int floorLevel;
 
     // Constructor for Apartment class
-    public Apartment(String address, double price, int floorLevel) {
+    public Apartment(Address address, double price, int floorLevel) {
         super(address, price, "Apartment");
         this.floorLevel = floorLevel;
     }
@@ -29,6 +29,6 @@ public final class Apartment extends Property implements Rentable {
     // Implementation of rent method from Rentable interface
     @Override
     public void rent() {
-        System.out.println("Apartment at " + getAddress() + " on floor " + floorLevel + " has been rented.");
+        System.out.println("Apartment at " + getAddress().street() + ", " + getAddress().city() + " on floor " + floorLevel + " has been rented.");
     }
 }
