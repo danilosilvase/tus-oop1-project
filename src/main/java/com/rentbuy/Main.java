@@ -35,8 +35,16 @@ public class Main {
 
                 switch (choice) {
                     case 1 -> {
-                        System.out.println("Enter property type (House/Apartment):");
-                        String type = scanner.nextLine().toLowerCase();
+                        System.out.println("Select property type:");
+                        System.out.println("1. House");
+                        System.out.println("2. Apartment");
+                        int propertyTypeChoice = scanner.nextInt();
+                        scanner.nextLine(); // Consume the newline character
+
+                        if (propertyTypeChoice != 1 && propertyTypeChoice != 2) {
+                            System.out.println("Invalid property type selection. Please choose either 1 (House) or 2 (Apartment).");
+                            break;
+                        }
 
                         System.out.println("Enter street address:");
                         String street = scanner.nextLine();
@@ -50,24 +58,23 @@ public class Main {
                         double price = scanner.nextDouble();
                         scanner.nextLine(); // Consume the newline character
 
-                        if (type.equals("house")) {
+                        if (propertyTypeChoice == 1) {
                             System.out.println("Does it have a garden? (true/false):");
                             boolean hasGarden = scanner.nextBoolean();
                             scanner.nextLine(); // Consume the newline character
                             House house = new House(address, price, hasGarden);
                             properties.add(house);
                             System.out.println("House added: " + house.getDetails());
-                        } else if (type.equals("apartment")) {
+                        } else if (propertyTypeChoice == 2) {
                             System.out.println("Enter floor level:");
                             int floorLevel = scanner.nextInt();
                             scanner.nextLine(); // Consume the newline character
                             Apartment apartment = new Apartment(address, price, floorLevel);
                             properties.add(apartment);
                             System.out.println("Apartment added: " + apartment.getDetails());
-                        } else {
-                            System.out.println("Invalid property type.");
                         }
                     }
+
                     case 2 -> {
                         System.out.println("Enter customer name:");
                         String name = scanner.nextLine();
@@ -177,10 +184,15 @@ public class Main {
                         List<Property> availableProperties = properties.stream()
                                 .filter(property -> property.getStatus() == PropertyStatus.AVAILABLE)
                                 .collect(Collectors.toList());
-                        for (Property property : availableProperties) {
-                            System.out.println(property.getDetails());
+                        if (availableProperties.isEmpty()) {
+                            System.out.println("No available properties at the moment.");
+                        } else {
+                            for (Property property : availableProperties) {
+                                System.out.println(property.getDetails());
+                            }
                         }
                     }
+
                     case 0 -> {
                         running = false;
                         System.out.println("Exiting RentBuy. Goodbye!");
