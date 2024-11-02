@@ -136,16 +136,42 @@ public class Main {
                         }
                     }
                     case 6 -> {
-                        System.out.println("Enter the address of the property to purchase:");
-                        String purchaseAddress = scanner.nextLine();
-                        Property propertyToPurchase = findPropertyByAddress(properties, purchaseAddress);
-                        if (propertyToPurchase != null && propertyToPurchase.getStatus() == PropertyStatus.AVAILABLE) {
-                            propertyToPurchase.setStatus(PropertyStatus.SOLD);
-                            System.out.println("Property purchased: " + propertyToPurchase.getDetails());
+                        System.out.println("Enter customer name:");
+                        String customerName = scanner.nextLine();
+                        Customer customer = findCustomerByName(customers, customerName);
+
+                        if (customer == null) {
+                            System.out.println("Customer not found. Please create the customer first.");
+                            break;
+                        }
+
+                        List<Property> availablePropertiesForPurchase = properties.stream()
+                                .filter(property -> property.getStatus() == PropertyStatus.AVAILABLE)
+                                .collect(Collectors.toList());
+
+                        if (availablePropertiesForPurchase.isEmpty()) {
+                            System.out.println("No available properties for purchase.");
+                            break;
+                        }
+
+                        System.out.println("Available Properties for Purchase:");
+                        for (int i = 0; i < availablePropertiesForPurchase.size(); i++) {
+                            System.out.println((i + 1) + ". " + availablePropertiesForPurchase.get(i).getDetails());
+                        }
+
+                        System.out.println("Enter the number of the property to purchase:");
+                        int propertyIndex = scanner.nextInt() - 1;
+                        scanner.nextLine();
+
+                        if (propertyIndex < 0 || propertyIndex >= availablePropertiesForPurchase.size()) {
+                            System.out.println("Invalid property selection.");
                         } else {
-                            System.out.println("Property not found or already taken.");
+                            Property propertyToPurchase = availablePropertiesForPurchase.get(propertyIndex);
+                            propertyToPurchase.setStatus(PropertyStatus.SOLD);
+                            System.out.println("Property purchased successfully: " + propertyToPurchase.getDetails());
                         }
                     }
+
                     case 7 -> {
                         System.out.println("Available Properties:");
                         List<Property> availableProperties = properties.stream()
@@ -163,7 +189,7 @@ public class Main {
                 }
             } catch (java.util.InputMismatchException e) {
                 System.out.println("Invalid input. Please enter a number corresponding to the menu options.");
-                scanner.nextLine(); // Consume the invalid input
+                scanner.nextLine(); 
             }
         }
 
