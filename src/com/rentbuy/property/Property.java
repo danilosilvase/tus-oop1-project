@@ -2,13 +2,13 @@ package com.rentbuy.property;
 
 // Sealed class Property, allowing only House and Apartment to extend it
 public sealed abstract class Property permits House, Apartment {
-    private String address;
+    private Address address;
     private double price;
     private String type;
     private PropertyStatus status;
 
     // Constructor
-    public Property(String address, double price, String type) {
+    public Property(Address address, double price, String type) {
         this.address = address;
         this.price = price;
         this.type = type;
@@ -16,11 +16,11 @@ public sealed abstract class Property permits House, Apartment {
     }
 
     // Getters and Setters
-    public String getAddress() {
+    public Address getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
+    public void setAddress(Address address) {
         this.address = address;
     }
 
@@ -53,6 +53,7 @@ public sealed abstract class Property permits House, Apartment {
 
     @Override
     public String toString() {
-        return "Address: " + address + ", Price: " + price + ", Type: " + type + ", Status: " + status;
+        return "Address: " + address.street() + ", " + address.city() + ", " + address.country() +
+                ", Price: " + price + ", Type: " + type + ", Status: " + status;
     }
 }
