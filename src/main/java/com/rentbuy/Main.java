@@ -206,6 +206,19 @@ public class Main {
                         }
                     }
 
+                    case 9 -> {
+                        System.out.println("Enter the address of the property to remove:");
+                        String addressToRemove = scanner.nextLine();
+                        Property propertyToRemove = findPropertyByAddress(properties, addressToRemove);
+
+                        if (propertyToRemove == null) {
+                            System.out.println("Property not found.");
+                        } else {
+                            properties.remove(propertyToRemove);
+                            System.out.println("Property removed successfully: " + propertyToRemove.getDetails());
+                        }
+                    }
+
                     case 0 -> {
                         running = false;
                         System.out.println("Exiting RentBuy. Goodbye!");
